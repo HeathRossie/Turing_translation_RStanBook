@@ -68,7 +68,7 @@ end
 chn = sample(mod75(d.Age, d.Weight, d.Y), NUTS(), 2000)
 chn = chn[1000:2000]
 
-### model 7-5
+### model 7-6
 # 説明変数にノイズが含まれる場合
 d = download("https://raw.githubusercontent.com/MatsuuraKentaro/RStanBook/master/chap04/input/data-salary.txt") |> CSV.File |> DataFrame
 
