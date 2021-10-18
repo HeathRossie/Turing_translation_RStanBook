@@ -89,8 +89,7 @@ chn = sample(mod76(d.X, d.Y), NUTS(), 2000)
 chn = chn[1000:2000]
 
 
-### model 7-7
-# データに打ち切りがあるケース
+# やり方がわからなかったので保留
 d = download("https://raw.githubusercontent.com/MatsuuraKentaro/RStanBook/master/chap07/input/data-protein.txt") |> CSV.File |> DataFrame
 d.Y2 = copy(d.Y)
 d.censor = repeat([0.], length(d.Y))
@@ -98,18 +97,6 @@ d[d.Y.=="<25",:censor] .= 1
 d[d.Y.=="<25",:Y2] .= "0"
 d.Y2 = parse.(Float64, d.Y2)
 
-
-@model function mod77(Y, censor)
-    µ ~ Normal(0, 2)
-    σ ~ truncated(Normal(0, 100), 0, Inf)
-    for i in 1:length(Y)
-        if censor[i] == 0  # observed
-            Turing.@addlogprob! logpdf(Normal(µ, σ), Y[i])
-        elseif censor[i] == 1  # censored
-            Turing.@addlogprob! logccdf(Normal(µ, σ), Y[i])
-        end
-    end
-end
 
 chn = sample(mod77(d.Y2, d.censor), NUTS(), 2000)
 chn = chn[1000:2000]
