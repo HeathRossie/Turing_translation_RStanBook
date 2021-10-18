@@ -88,7 +88,8 @@ end
 chn = sample(mod76(d.X, d.Y), NUTS(), 2000)
 chn = chn[1000:2000]
 
-
+### model 7-7
+# データに打ち切りがあるケース
 # やり方がわからなかったので保留
 d = download("https://raw.githubusercontent.com/MatsuuraKentaro/RStanBook/master/chap07/input/data-protein.txt") |> CSV.File |> DataFrame
 d.Y2 = copy(d.Y)
