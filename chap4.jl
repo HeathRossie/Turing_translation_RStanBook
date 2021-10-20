@@ -46,3 +46,33 @@ describe(chn)[1]
 describe(chn)[2]
 plot(chn)
 
+### 事後予測チェック
+X_new = collect(range(minimum(d.X), maximum(d.X), length=100))
+function prediction(chn, X_new)
+    p = get_params(chn)
+    targets = p.a' .+ X_new * reduce(hcat, p.b)
+    
+    postpred = zeros(size(targets))
+    for row in 1:size(targets)[1]
+        
+        for j in 1:length(p.σ)
+            postpred[row,j] = rand(Normal(targets[row,j], p.σ[j]), 1)[1] 
+        end
+
+  
+        
+    end
+
+    res = DataFrame(postmean = mean.(eachrow(postpred)),
+                    lower = quantile.(eachrow(postpred), .025),
+                    upper = quantile.(eachrow(postpred), .975),
+                    X = X_new
+    )
+    return res
+end
+
+res = prediction(chn, X_new)
+
+scatter(d.X, d.Y, legend=false)
+plot!(res.X, res.postmean, legend=false, ribbon=(res.postmean-res.lower, res.upper - res.postmean), fillalpha=0.2)
+
